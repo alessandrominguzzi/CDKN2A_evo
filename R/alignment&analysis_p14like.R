@@ -2,29 +2,40 @@
 ## ALIGNMENT OF p14 CANDIDATES ##
 # ==============================================================================
 
+# This script aims to align the mRNA and CDS sequences obtained from blastn 
+# using the 'human_p14_CDS.fasta" query, in order to assess sequence   
+# conservation and evaluate the plausibility of their homology. 
+
+
 # ==============================================================================
 # 1. mRNA Alignment
 # ==============================================================================
 
 #Loading libraries
+
 library(Biostrings)
 library(DECIPHER)
 library(ggplot2)
+library(readxl)
 
-#Setting paths
+#Setting paths and loading metadata
+
+metadata_dir <- path.expand("~/CDKN2A_evo/raw_data/metadata/p14_blastn_sheet.xlsx")
+metadata <- read_excel(metadata_dir)
 
 fasta_dir <- path.expand("~/CDKN2A_evo/raw_data/sequences/p14_candidates_blastn")
-
-metadata_dir <- path.expand("~/CDKN2A_evo/raw_data/metadata/p14_blast_sheet.xlsx")
-
 setwd(fasta_dir)
+
+# Loading metadata
+
+metadata <- read_excel(metadata_dir)
 
 #obtaining alignment
 
-mrna_seqs <- readDNAStringSet("all_species_combined_mRNA.fasta")
+mrna_seqs <- readDNAStringSet("p14like_all_species_combined_mRNA.fasta")
 aligned_mRNA <- AlignSeqs(mrna_seqs, verbose = FALSE)
 
-#writeXStringSet(aligned_mRNA, filepath = "aligned_mRNA.fasta")
+#writeXStringSet(aligned_mRNA,  filepath = "/mnt/scratch/home/alessandro/CDKN2A_evo/processed_data/p14like_aligned_mRNA.fasta")
 
 
 # ==============================================================================
@@ -33,7 +44,7 @@ aligned_mRNA <- AlignSeqs(mrna_seqs, verbose = FALSE)
 
 ## 2.1 Reading CDS sequences
 
-cds_seqs <- readDNAStringSet("all_species_combined_CDS.fasta")
+cds_seqs <- readDNAStringSet("p14like_all_species_combined_CDS.fasta") 
 
 ## 2.2 ORF integrity check
 
