@@ -21,7 +21,7 @@ library(tidyverse)
 # ==============================================================================
 
 fasta_dir  <- path.expand("~/Documents/PhD_work/CDKN2A_evo/raw_data/sequences/selected_p14_candidates")
-output_dir <- path.expand("~/Documents/PhD_work/CDKN2A_evo/processed_data/alignments")
+output_dir <- path.expand("~/Documents/PhD_work/CDKN2A_evo/processed_data/alignments/p14_analysis")
 
 cds_seqs <- readDNAStringSet(file.path(fasta_dir, "p14_selected_species_combined_CDS.fasta"))
 
@@ -33,8 +33,9 @@ ref_id    <- grep("human", names(cds_seqs), value = TRUE)
 exon1b_nt <- 64 * 3
 
 
-# test: remove anolis sequence
+# Without anolis sequence: remove comment on the following lines and run the code. 
 # cds_seqs <- cds_seqs[!grepl("anolis", names(cds_seqs), ignore.case = TRUE)]
+# output_dir <- path.expand("~/Documents/PhD_work/CDKN2A_evo/processed_data/alignments/p14_analysis_no_anolis")
 
 # ==============================================================================
 # 2. ALIGNMENTS
@@ -151,7 +152,7 @@ alignment_summary <- alignment_lengths %>%
   left_join(quality_summary, by = "Method") %>%
   left_join(codon_frame_stats, by = "Method")
 
-#write.csv2(alignment_summary, file.path(output_dir, "alignment_summary.csv"), row.names = FALSE)
+# write.csv2(alignment_summary, file.path(output_dir, "p14_alignment_summary.csv"), row.names = FALSE)
 
 ## 3.5 Plots
 
@@ -178,7 +179,7 @@ p_alignment <- ggplot(alignment_plot, aes(x = Method, y = Value, fill = Method))
     plot.title         = element_text(face = "bold", hjust = 0.5)
   )
 
-#ggsave(filename = file.path(output_dir, "alignment_comparison.png"), plot = p_alignment, width = 12, height = 8, dpi = 300)
+# ggsave(filename = file.path(output_dir, "p14_alignment_comparison.png"), plot = p_alignment, width = 12, height = 8, dpi = 300)
 
 # Positional conservation score
 positional_quality <- bind_rows(quality_list, .id = "Method") %>%
@@ -198,7 +199,7 @@ p_position_alignment <- ggplot(
     plot.title      = element_text(face = "bold", hjust = 0.5)
   )
 
-#ggsave(filename = file.path(output_dir, "positional_alignment_comparison.png"), plot = p_position_alignment, width = 12, height = 8, dpi = 300)
+# ggsave(filename = file.path(output_dir, "p14_positional_alignment_comparison.png"), plot = p_position_alignment, width = 12, height = 8, dpi = 300)
 
 # ==============================================================================
 # 4. ALIGNMENTS WITH EXON 1b MARKED
@@ -256,8 +257,7 @@ plot_alignment <- function(method) {
 for (method in names(alignments)) {
   p <- plot_alignment(method)
   print(p)
- # ggsave(file.path(output_dir, paste0("alignment_exon1b_", method, ".png")),
- #       p, width = 14, height = 4, dpi = 300)
+  # ggsave(file.path(output_dir, paste0("p14_alignment_exon1b_", method, ".png")), p, width = 14, height = 4, dpi = 300)
 }
 
 # ==============================================================================
@@ -308,7 +308,7 @@ codon_conservation_plot <- ggplot(aa_quality, aes(x = Position, y = Conservation
     plot.subtitle = element_text(hjust = 0.5)
   )
 
-#ggsave(filename = file.path(output_dir, "codon_conservation_score.png"), plot = codon_conservation_plot, width = 12, height = 8, dpi = 300)
+# ggsave(filename = file.path(output_dir, "p14_codon_conservation_score.png"), plot = codon_conservation_plot, width = 12, height = 8, dpi = 300)
 
 ## 5.3 Alignment plot by codon 
 
@@ -345,7 +345,7 @@ ggplot(df, aes(x = Codon, y = Sequence, fill = Status)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_discrete(expand = expansion(add = c(0.5, 1.5))) +
   coord_cartesian(clip = "off") +
-  labs(title = "DECIPHER codon-aware alignment compared with human, by codon",
+  labs(title = "p14 candidate sequences: DECIPHER codon-aware alignment compared with human, by codon",
        x = "Codon position in alignment", y = NULL, fill = NULL) +
   theme_minimal(base_size = 13) +
   theme(
@@ -354,7 +354,7 @@ ggplot(df, aes(x = Codon, y = Sequence, fill = Status)) +
     legend.position = "bottom"
   )
 
-# ggsave(file.path(output_dir, "alignment_codons_decipher.png"), width = 14, height = 4, dpi = 300)
+# ggsave(file.path(output_dir, "p14_alignment_codons_decipher.png"), width = 14, height = 4, dpi = 300)
 
 # ==============================================================================
 # 6. CONSERVED REGIONS AND SUPPORT FOR HOMOLOGY
@@ -418,7 +418,7 @@ homology_support <- data.frame(
                                 100 * sum(aa_regions$Length[aa_regions$In_exon1b]) / sum(aa_regions$Length))
 )
 
-#write.csv2(homology_support, file.path(output_dir, "homology_support_arf_seqs.csv"), row.names = FALSE)
+# write.csv2(homology_support, file.path(output_dir, "homology_support_arf_seqs.csv"), row.names = FALSE)
 
 ## 6.3 Plot: conservation score with conserved regions and exon 1b highlighted 
 
@@ -457,8 +457,8 @@ aa_conservation_plot <- plot_conservation(
 print(nt_conservation_plot)
 print(aa_conservation_plot)
 
-#ggsave(filename = file.path(output_dir, "nucleotide_conservation_DECIPHER.png"), plot = nt_conservation_plot, width = 12, height = 8, dpi = 300)
-#ggsave(filename = file.path(output_dir, "amino_acid_conservation_DECIPHER.png"), plot = aa_conservation_plot, width = 12, height = 8, dpi = 300)
+# ggsave(filename = file.path(output_dir, "p14_nucleotide_conservation_DECIPHER.png"), plot = nt_conservation_plot, width = 12, height = 8, dpi = 300)
+# ggsave(filename = file.path(output_dir, "p14_amino_acid_conservation_DECIPHER.png"), plot = aa_conservation_plot, width = 12, height = 8, dpi = 300)
 
 
 # ==============================================================================
