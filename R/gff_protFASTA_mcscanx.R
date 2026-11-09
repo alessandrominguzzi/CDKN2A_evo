@@ -123,15 +123,8 @@ convert_faa <- function(file) {
   # Add species prefix to gene IDs
   filename <- basename(file)
   species <- unname(faa_species_map[filename])
-  
-  if (is.na(species)) {
-    stop(paste("No species prefix defined for:", filename))
-  }
-  
   gene_ids <- paste(species, gene_ids, sep = "_")
-  
   names(proteins) <- gene_ids
-  
   proteins
 }
 
